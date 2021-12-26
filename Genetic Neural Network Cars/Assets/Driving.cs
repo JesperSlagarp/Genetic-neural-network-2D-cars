@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class Driving : MonoBehaviour
 {
+    public float fitness = 0;
+    public float adjustedSpeed;
     [SerializeField] private float speed = 0;
     [SerializeField] private float throttle;
     [SerializeField] private float steer = 0;
-    [SerializeField] private float steeringWheelRot = 0;
+    [SerializeField] public float steeringWheelRot = 0;
     [SerializeField] 
     private NeuralNetwork input;
 
     private bool stopped = false;
     private float TOP_SPEED = 10;
-    private float STEERING_DEADZONE = 0.1f;
-    private float WHEEL_TURNING_SPEED = 0.1f;
+    //private float STEERING_DEADZONE = 0.1f;
+    //private float WHEEL_TURNING_SPEED = 0.1f;
+
 
     // Start is called before the first frame update
-    void Start()
-    {   
-        
+    void Awake()
+    {
+        input.init();
     }
 
     private void move()
@@ -28,28 +31,50 @@ public class Driving : MonoBehaviour
         speed += (throttle / (1 + speed));
         if (speed < 0) speed = 0;
         else if (speed > TOP_SPEED) speed = TOP_SPEED;
+        adjustedSpeed = speed / TOP_SPEED;
 
         Vector3 forward = transform.up.normalized * (speed / 100);
         transform.position += forward;
 
-        if (speed > 0.1) //no steering standing still
+        if (speed > 1f) //no steering standing still
         {
             Vector3 right = -Vector3.forward;
             transform.Rotate(right, steeringWheelRot);
         }
     }
 
+    private void Reset()
+    {
+        speed = 0;
+        throttle = 0;
+        steer = 0;
+        steeringWheelRot = 0;
+        adjustedSpeed = 0;
+        fitness = 0;
+    }
+
     private void getInput() {
-        //throttle = input.throttle;
-        //steer = intput.steer;
+        //Uncomment for neural network input
+        //if (Input.GetKey("t"))
+        //{
+                //Debug.Log("T pressed");
+                float[] inputs = input.tick();
+                throttle = inputs[0];
+                throttle = 2 * (throttle - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
+                steer = inputs[1];
+                steer = 5 * (steer - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
+
+        steeringWheelRot = steer;
+        //}
+        /*
         if (Input.GetKey("w")) throttle = 1;
         else throttle = -1;
         if (Input.GetKey("a")) steer = -1;
         else if (Input.GetKey("d")) steer = 1;
-        else steer = 0;
+        else steer = 0;*/
 
       
-      if (steer > STEERING_DEADZONE)
+      /*if (steer > STEERING_DEADZONE)
       { //Turn right
             steeringWheelRot += steer * WHEEL_TURNING_SPEED;
             if (steeringWheelRot > 1) steeringWheelRot = 1;
@@ -64,7 +89,7 @@ public class Driving : MonoBehaviour
             if (steeringWheelRot > STEERING_DEADZONE) steeringWheelRot -= WHEEL_TURNING_SPEED;
             else if (steeringWheelRot < -STEERING_DEADZONE) steeringWheelRot += WHEEL_TURNING_SPEED;
             else steeringWheelRot = 0;
-      }
+      }*/
        
     }
 
@@ -81,17 +106,19 @@ public class Driving : MonoBehaviour
         {
             getInput();
             move();
+            fitness += speed * 0.1f;
         }
     }
 
     public void enable()
     {
         stopped = false;
+        Reset();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.LogError("entered");
+        //Debug.LogError("entered");
         stopped = true;
     }
 }

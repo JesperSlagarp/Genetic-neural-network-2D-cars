@@ -41,6 +41,9 @@ TagManager:
   - name: Background
     uniqueID: 4183120637
     locked: 0
+  - name: Car
+    uniqueID: 3299280667
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

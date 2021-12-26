@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Sensor : MonoBehaviour
 {
-    public float sensorDistance;
+    private float sensorDistance;
+    public float adjustedSensorDistance;
     [SerializeField] private float hitpointX;
     [SerializeField] private float hitpointY;
     private float maxDist = 100;
@@ -29,6 +30,7 @@ public class Sensor : MonoBehaviour
             drawLine(transform.position, transform.position + transform.up * maxDist);
             sensorDistance = maxDist;
         }
+        adjustedSensorDistance = sensorDistance / maxDist;
     }
 
     void drawLine(Vector2 startPos, Vector2 endPos) {
