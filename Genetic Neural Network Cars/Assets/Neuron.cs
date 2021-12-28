@@ -67,10 +67,10 @@ public class Neuron //: MonoBehaviour
         return prod;
     }
 
-    public void mutate() { 
+    public void mutate(float amount) { 
         for(int i = 0; i < weights.Length; i++)
         {
-            weights[i] += Random.Range(-1f, 1f);
+            weights[i] += Random.Range(-amount, amount);
         }
     }
 

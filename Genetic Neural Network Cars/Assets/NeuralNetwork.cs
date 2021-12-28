@@ -8,19 +8,13 @@ public class NeuralNetwork : MonoBehaviour
     private Sensor[] sensors;
     [SerializeField]
     private Driving car;
-    //public float throttle { get; }
-    //public float steer { get; }
 
     private List<Neuron[]> layers;
+    public int numLayers = 0;
 
     public void init()
     {
         layers = new List<Neuron[]>();
-        /*
-        initLayer(5, 7, true);
-        initLayer(5, 5, true);
-        initLayer(2, 5, false);
-        */
     }
 
     public float[] tick() 
@@ -67,6 +61,7 @@ public class NeuralNetwork : MonoBehaviour
             neurons[i] = new Neuron(prevSize, isHidden);
         }
         layers.Add(neurons);
+        numLayers++;
     }
 
     public void initLayer(float[][] weights, bool isHidden) 
@@ -77,6 +72,7 @@ public class NeuralNetwork : MonoBehaviour
             neurons[i] = new Neuron(weights[i], isHidden);
         }
         layers.Add(neurons);
+        numLayers++;
     }
 
     public float[][] getLayerWeights(int layerIndex) {
@@ -88,12 +84,12 @@ public class NeuralNetwork : MonoBehaviour
         return weights;
     }
 
-    public void mutate() { 
+    public void mutate(float amount) { 
         for(int i = 0; i < layers.Count; i++)
         {
             for(int j = 0; j < layers[i].Length; j++)
             {
-                layers[i][j].mutate();
+                layers[i][j].mutate(amount);
             }
         }
     }

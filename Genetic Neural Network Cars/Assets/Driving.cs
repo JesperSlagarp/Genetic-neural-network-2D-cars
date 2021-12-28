@@ -119,6 +119,7 @@ public class Driving : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.LogError("entered");
+        GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().decreaseAlive();
         stopped = true;
     }
 }
