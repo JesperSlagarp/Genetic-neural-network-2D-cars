@@ -145,9 +145,35 @@ public class GeneticAlgorithm : MonoBehaviour
         return offspring;
     }
 
+    private GameObject copy(GameObject Original)
+    {
+        NeuralNetwork origNN = Original.GetComponent<NeuralNetwork>();
+        GameObject copy = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
+        NeuralNetwork copyNN = copy.GetComponent<NeuralNetwork>();
+        for (int i = 0; i < origNN.numLayers; i++)
+        {
+            float[][] origWeights = origNN.getLayerWeights(i);
+            float[][] copyWeights = new float[origWeights.Length][];
+            for (int j = 0; j < origWeights.Length; j++)
+            {
+                copyWeights[j] = new float[origWeights[j].Length];
+                for (int k = 0; k < origWeights[j].Length; k++)
+                {                  
+                        copyWeights[j][k] = origWeights[j][k];
+                }
+            }
+            if (i == origNN.numLayers - 1) copyNN.initLayer(copyWeights, false); //outputlayer
+            else copyNN.initLayer(copyWeights, true); //hidden layer
+        }
+
+        return copy;
+    }
+
     private void newGen()
     {
         List<GameObject> selected = new List<GameObject>();
+
+        GameObject bestAgent = copy(cars[genSize - 1]);
 
         //Add the best 10% of agents into list
         for (int i = genSize; i > genSize * 0.9f; i--) 
@@ -180,6 +206,11 @@ public class GeneticAlgorithm : MonoBehaviour
                 spawnedAgents++;
             }
         }
+        /*Make sure the last generation's best agent is kept*/
+        Destroy(cars[genSize - 1]);
+        cars[genSize - 1] = bestAgent;
+        carsNN[genSize - 1] = bestAgent.GetComponent<NeuralNetwork>();
+        carsDriving[genSize - 1] = bestAgent.GetComponent<Driving>();
 
         /*
         for (int i = 0; i < genSize; i++)
