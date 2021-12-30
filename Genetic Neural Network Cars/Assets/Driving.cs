@@ -36,7 +36,7 @@ public class Driving : MonoBehaviour
         Vector3 forward = transform.up.normalized * (speed / 100);
         transform.position += forward;
 
-        if (speed > 1f) //no steering standing still
+        if (speed > 2f) //no steering standing still
         {
             Vector3 right = -Vector3.forward;
             transform.Rotate(right, steeringWheelRot);
@@ -62,7 +62,7 @@ public class Driving : MonoBehaviour
                 throttle = inputs[0];
                 throttle = 2 * (throttle - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
                 steer = inputs[1];
-                steer = 5 * (steer - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
+                steer = 3 * (steer - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
 
         steeringWheelRot = steer;
         //}
@@ -93,6 +93,8 @@ public class Driving : MonoBehaviour
        
     }
 
+
+
     /*Returns speed and rotation of steering wheel*/
     public float[] getData() 
     {
@@ -119,7 +121,10 @@ public class Driving : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.LogError("entered");
-        GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().decreaseAlive();
+        try
+        {
+            GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().decreaseAlive();
+        } catch { }
         stopped = true;
     }
 }

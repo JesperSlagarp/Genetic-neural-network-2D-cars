@@ -26,7 +26,7 @@ public class Neuron //: MonoBehaviour
 
     /* The activation function varies depending on if neuron is hidden
      * -If hidden: ReLU
-     * -If output: shifted 
+     * -If output: Sigmoid
      * 
      * Takes an array of inputs,
      * Returns neuron output

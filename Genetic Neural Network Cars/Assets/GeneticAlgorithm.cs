@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GeneticAlgorithm : MonoBehaviour
 {
-    public int timeScale;
+    //public int timeScale;
     [SerializeField]
     private int intervall = 500;
     [SerializeField]
@@ -63,7 +63,7 @@ public class GeneticAlgorithm : MonoBehaviour
             intervallCounter = 0;
         }
         currBestIndex = mostFitAgentIndex();
-        Time.timeScale = timeScale;
+        //Time.timeScale = timeScale;
     }
 
     private void sort()
@@ -245,5 +245,19 @@ public class GeneticAlgorithm : MonoBehaviour
     public void decreaseAlive()
     {
         numAlive--;
+    }
+
+    public GameObject getBestAgent()
+    {
+
+        return cars[currBestIndex];
+    }
+
+    private void OnDisable()
+    {
+        for(int i = 0; i < genSize; i++)
+        {
+            Destroy(cars[i]);
+        }
     }
 }
