@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeScale: 0
+  carPrefab: {fileID: 1767883984704743916, guid: d2c18bdb11ade9f499b4c85e2f017a19, type: 3}
