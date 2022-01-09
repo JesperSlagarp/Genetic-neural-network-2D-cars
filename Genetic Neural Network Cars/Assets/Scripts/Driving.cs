@@ -14,7 +14,7 @@ public class Driving : MonoBehaviour
     private NeuralNetwork input;
 
     private bool stopped = false;
-    private float TOP_SPEED = 10;
+    private float TOP_SPEED = 15;
     //private float STEERING_DEADZONE = 0.1f;
     //private float WHEEL_TURNING_SPEED = 0.1f;
 
@@ -50,7 +50,6 @@ public class Driving : MonoBehaviour
         steer = 0;
         steeringWheelRot = 0;
         adjustedSpeed = 0;
-        fitness = 0;
     }
 
     private void getInput() {
@@ -62,7 +61,7 @@ public class Driving : MonoBehaviour
                 throttle = inputs[0];
                 throttle = 2 * (throttle - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
                 steer = inputs[1];
-                steer = 3 * (steer - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-1,1)
+                steer = 4 * (steer - 0.5f); //Adjustment for sigmoid range, from (0,1) to (-4,4)
 
         steeringWheelRot = steer;
         //}
@@ -121,10 +120,25 @@ public class Driving : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.LogError("entered");
-        try
+        if (collision.collider.tag == "Walls")
         {
-            GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().decreaseAlive();
-        } catch { }
-        stopped = true;
+            try
+            {
+                GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().decreaseAlive();
+            }
+            catch { }
+            stopped = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {   
+        fitness += 100;
+        //Debug.Log("Collider tag: " + collision.gameObject.tag);
+        if(collision.gameObject.tag == "Finish")
+        {
+            //Debug.Log("Finished");
+            GameObject.FindGameObjectWithTag("Genetic Algorithm").GetComponent<GeneticAlgorithm>().finThisGen++;
+        }
     }
 }

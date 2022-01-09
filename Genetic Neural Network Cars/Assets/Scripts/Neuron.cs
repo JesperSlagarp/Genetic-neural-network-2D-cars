@@ -13,7 +13,7 @@ public class Neuron //: MonoBehaviour
     public Neuron(int numInputs, bool isHidden) {
         this.numInputs = numInputs;
         this.weights = new float[this.numInputs + 1];
-        genWeights(-5.0f, 5.0f);
+        genWeights(-2.0f, 2.0f);
         this.isHidden = isHidden;
     }
 
@@ -67,10 +67,11 @@ public class Neuron //: MonoBehaviour
         return prod;
     }
 
-    public void mutate(float amount) { 
+    public void mutate(float range, float chance) { 
         for(int i = 0; i < weights.Length; i++)
         {
-            weights[i] += Random.Range(-amount, amount);
+            if (Random.Range(0f, 1f) < chance)
+                weights[i] += Random.Range(-range, range);
         }
     }
 

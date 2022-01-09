@@ -84,12 +84,12 @@ public class NeuralNetwork : MonoBehaviour
         return weights;
     }
 
-    public void mutate(float amount) { 
+    public void mutate(float range, float chance) { 
         for(int i = 0; i < layers.Count; i++)
         {
             for(int j = 0; j < layers[i].Length; j++)
             {
-                layers[i][j].mutate(amount);
+                layers[i][j].mutate(range, chance);
             }
         }
     }
